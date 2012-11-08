@@ -1,0 +1,5 @@
+Testing Post
+<form method="post">
+{% raw xsrf_form_html() %}
+    <input name="test"/>
+</form>
