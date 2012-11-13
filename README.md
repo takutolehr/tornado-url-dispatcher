@@ -14,9 +14,9 @@ If you want the controller function to render a different template file, return 
 ###Naming Conventions:
 
 1. The controller file name must match {{controller_name}}.
-    * ex. "test.py"\n
-2. The controller class name must be {{controller_name}} capitalized.\n
-    * ex. "Test"\n
+    * ex. "test.py"
+2. The controller class name must be {{controller_name}} capitalized.
+    * ex. "Test"
 
 ###See it work:
 
