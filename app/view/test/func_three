@@ -1,11 +1,7 @@
-Submit your name.
+Redirect demo.
 <form method="post">
 {% raw xsrf_form_html() %}
-    <label>Name</label>
+    <label>Whatever</label>
     <input name="name"/>
     <button type="submit">submit</button>
 </form>
-
-{% if '' != name %}
-    Hello {{name}}
-{% end %}

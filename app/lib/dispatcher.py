@@ -13,6 +13,8 @@ import tornado.web
     
 class Dispatcher(tornado.web.RequestHandler):
     
+    home = ''
+    
     def get(self):
         self.__render()
 
@@ -20,19 +22,36 @@ class Dispatcher(tornado.web.RequestHandler):
         self.__render()
 
     def __render(self):
-        
+
+        if '/' == self.request.uri:
+            self.request.uri = self.home
+
         uri = self.request.uri.split('?', 1)[0].split('/')[1:]
-        
-        _class_name = uri[0].capitalize()
+        args = self.request.uri.split('?', 1)[0].split('/')[3:]
+        _class_name = uri[0].capitalize()+'Controller'
         _method_name = uri[1]
-        _temp = __import__('app.controller.'+uri[0], globals(), locals(), [_class_name], -1)
+        
+        _temp = __import__('app.controller.'+uri[0]+'_controller', globals(), locals(), [_class_name], -1)
         _class = getattr(_temp, _class_name)
         _class = _class(self.application, self.request)
         _method = getattr(_class, _method_name)
-        temp_file = _method()
-        if None == temp_file:
-            temp_file = uri[1]
 
-        template_dir = os.path.dirname(__file__)+'/../view/'+uri[0]+'/'
-        
-        self.render(template_dir+temp_file)
+        data = _method(*args)
+        if not(isinstance(data, dict)):
+            data = {}
+
+        if '__redirect' in data:
+            self.redirect(data['__redirect'])
+
+        template_file = None
+        if '__template_file' in data:
+            template_file = data['__template_file']
+
+        if None == template_file:
+            template_file = _method_name
+
+        template_dir = os.path.dirname(__file__)+'/../view/'
+        data['__template_dir'] = template_dir
+        data['__template_path'] = template_dir+uri[0]+'/'+template_file
+        self.render(template_dir+'layout/default', data=data)
+

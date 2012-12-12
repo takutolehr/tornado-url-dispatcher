@@ -1,0 +1,18 @@
+<html>
+<head>
+    <link rel="stylesheet" href="{{ static_url('css/style.css') }}" type="text/css" />
+</head>
+<body>
+    <div class="header">
+        <h3>My Title</h3>
+    </div>
+    <!-- END HEADER -->
+    <div class="clear"></div>
+    <div class="container">
+        {% module Template(data['__template_path'], **data) %}
+    </div>
+    <!-- END CONTAINER -->
+    <div class="clear"></div>
+    <div class="footer"></div>
+</body>
+</html>
