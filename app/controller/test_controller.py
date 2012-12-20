@@ -15,5 +15,5 @@ class TestController(AppController):
 
         if 'POST' == self.request.method:
             """ Process post value. """
-            return {'__redirect': '/test/func_one'} # Redirect to func_one.
+            self.redirect('/test/func_one') # Redirect to func_one.
         return

@@ -10,7 +10,7 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 
 import os
 import tornado.web
-    
+
 class Dispatcher(tornado.web.RequestHandler):
     
     home = ''
@@ -33,15 +33,12 @@ class Dispatcher(tornado.web.RequestHandler):
         
         _temp = __import__('app.controller.'+uri[0]+'_controller', globals(), locals(), [_class_name], -1)
         _class = getattr(_temp, _class_name)
-        _class = _class(self.application, self.request)
+        _class = _class(self)
         _method = getattr(_class, _method_name)
 
         data = _method(*args)
         if not(isinstance(data, dict)):
             data = {}
-
-        if '__redirect' in data:
-            self.redirect(data['__redirect'])
 
         template_file = None
         if '__template_file' in data:
@@ -49,7 +46,7 @@ class Dispatcher(tornado.web.RequestHandler):
 
         if None == template_file:
             template_file = _method_name
-
+        
         template_dir = os.path.dirname(__file__)+'/../view/'
         data['__template_dir'] = template_dir
         data['__template_path'] = template_dir+uri[0]+'/'+template_file
