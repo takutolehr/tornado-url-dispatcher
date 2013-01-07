@@ -10,6 +10,7 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 
 import os
 import tornado.web
+import base64
 
 class Dispatcher(tornado.web.RequestHandler):
     
@@ -37,18 +38,31 @@ class Dispatcher(tornado.web.RequestHandler):
         _method = getattr(_class, _method_name)
 
         data = _method(*args)
+       
+        # Return required for redirect.
+        if 'exit' == data:
+            return
+
         if not(isinstance(data, dict)):
             data = {}
 
+        # Set template file.
         template_file = None
         if '__template_file' in data:
             template_file = data['__template_file']
-
         if None == template_file:
             template_file = _method_name
+        
+        # Set flash message.
+        if self.get_cookie('__flash'):
+            data['__flash'] = base64.b64decode(self.get_cookie('__flash'))
+            self.clear_cookie('__flash')
         
         template_dir = os.path.dirname(__file__)+'/../view/'
         data['__template_dir'] = template_dir
         data['__template_path'] = template_dir+uri[0]+'/'+template_file
-        self.render(template_dir+'layout/default', data=data)
 
+        if '__layout_off' in data:
+            self.render(template_dir+uri[0]+'/'+template_file, data=data)
+        else:
+            self.render(template_dir+'layout/default', data=data)

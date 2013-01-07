@@ -3,8 +3,16 @@
     <link rel="stylesheet" href="{{ static_url('css/style.css') }}" type="text/css" />
 </head>
 <body>
+    {% if '__flash' in data %}
+        {{data['__flash']}}
+    {% end %}
     <div class="header">
-        <h3>My Title</h3>
+        <h3>Tornado URL Dispatcher Demo</h3>
+        <div class="nav">
+            <a href="/test/func_one">demo 1</a>
+            <a href="/test/func_two">demo 2</a>
+            <a href="/test/func_three">demo 3</a>
+        </div>
     </div>
     <!-- END HEADER -->
     <div class="clear"></div>
